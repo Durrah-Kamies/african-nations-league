@@ -664,7 +664,7 @@ def api_player_analysis(match_id, player_name):
 
 # HTML ROUTES are no longer used by the React app.
 
-@app.route('/simulate_match/<match_id>')
+@app.route('/simulate_match/<match_id>', methods=['POST'])
 def simulate_match_route(match_id):
     try:
         match_ref = db.collection('matches').document(match_id)  # Load match doc
@@ -688,7 +688,7 @@ def simulate_match_route(match_id):
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)})
 
-@app.route('/play_match/<match_id>')
+@app.route('/play_match/<match_id>', methods=['POST'])
 def play_match(match_id):
     try:
         match_ref = db.collection('matches').document(match_id)
