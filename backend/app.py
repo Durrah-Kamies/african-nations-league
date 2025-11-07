@@ -16,7 +16,8 @@ load_dotenv()  # Load environment variables from .env (e.g., API keys, secrets)
 
 app = Flask(__name__)  # Create the Flask app instance
 app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key-2025')  # Used for session/signing
-CORS(app)  # Enable CORS for all routes (frontend can be on different domain)
+# Enable CORS for all routes - allow any origin with credentials
+CORS(app, resources={r"/*": {"origins": "*", "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"]}}, supports_credentials=False)
 
 # Initialize Firebase and Gemini
 # Firebase (Firestore) stores teams and matches; Gemini (optional) powers AI text.
