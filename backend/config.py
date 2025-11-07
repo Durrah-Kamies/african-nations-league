@@ -6,6 +6,10 @@ from firebase_admin import credentials, firestore
 import os
 import json
 import google.generativeai as genai
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 def initialize_firebase():
     """Create and return a Firestore client.
