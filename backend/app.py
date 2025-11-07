@@ -685,8 +685,8 @@ def simulate_match_route(match_id):
             'completed_at': datetime.now().isoformat()
         })
         
-        # Send email notification to federations
-        send_match_completion_email(match_data, result, db)
+        # Send email notification to federations (disabled to reduce timeout issues)
+        # send_match_completion_email(match_data, result, db)
         
         _progress_tournament_if_ready()  # If QFs or SFs finished, create next round
         
@@ -709,8 +709,8 @@ def play_match(match_id):
             'completed_at': datetime.now().isoformat()
         })
         
-        # Send email notification to federations
-        send_match_completion_email(match_data, result, db)
+        # Send email notification to federations (disabled to reduce timeout issues)
+        # send_match_completion_email(match_data, result, db)
         
         _progress_tournament_if_ready()  # Also advance bracket when using detailed play
         
