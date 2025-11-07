@@ -685,10 +685,13 @@ def simulate_match_route(match_id):
             'completed_at': datetime.now().isoformat()
         })
         
-        # Send email notification to federations (disabled to reduce timeout issues)
-        # send_match_completion_email(match_data, result, db)
-        
         _progress_tournament_if_ready()  # If QFs or SFs finished, create next round
+        
+        # Send email notification to federations (non-blocking, fails silently if timeout)
+        try:
+            send_match_completion_email(match_data, result, db)
+        except Exception as e:
+            print(f"Email notification failed (non-critical): {e}")
         
         return jsonify({'success': True, 'result': result})
     except Exception as e:
@@ -709,10 +712,13 @@ def play_match(match_id):
             'completed_at': datetime.now().isoformat()
         })
         
-        # Send email notification to federations (disabled to reduce timeout issues)
-        # send_match_completion_email(match_data, result, db)
-        
         _progress_tournament_if_ready()  # Also advance bracket when using detailed play
+        
+        # Send email notification to federations (non-blocking, fails silently if timeout)
+        try:
+            send_match_completion_email(match_data, result, db)
+        except Exception as e:
+            print(f"Email notification failed (non-critical): {e}")
         
         return jsonify({'success': True, 'result': result})
     except Exception as e:
