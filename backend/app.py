@@ -5,6 +5,7 @@
 from flask import Flask, request, jsonify, send_from_directory
 from config import initialize_firebase, initialize_gemini
 from ai_commentary import GeminiCommentaryGenerator
+from email_service import send_match_completion_email
 import random
 import os
 from datetime import datetime
@@ -674,6 +675,10 @@ def simulate_match_route(match_id):
             'status': 'completed',
             'completed_at': datetime.now().isoformat()
         })
+        
+        # Send email notification to federations
+        send_match_completion_email(match_data, result, db)
+        
         _progress_tournament_if_ready()  # If QFs or SFs finished, create next round
         
         return jsonify({'success': True, 'result': result})
@@ -694,6 +699,10 @@ def play_match(match_id):
             'status': 'completed',
             'completed_at': datetime.now().isoformat()
         })
+        
+        # Send email notification to federations
+        send_match_completion_email(match_data, result, db)
+        
         _progress_tournament_if_ready()  # Also advance bracket when using detailed play
         
         return jsonify({'success': True, 'result': result})

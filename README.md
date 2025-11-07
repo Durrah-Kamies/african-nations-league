@@ -40,6 +40,13 @@ Optional Gemini:
 
 - Set `GEMINI_API_KEY` to enable AI text (fallback used if missing)
 
+Optional Email Notifications:
+
+- Set `EMAIL_USER` (your Gmail address)
+- Set `EMAIL_PASSWORD` (app password for Gmail)
+- When configured, the system will automatically email the federations of both teams when matches are completed with scoreline and goal scorers
+- Federation emails are pulled from the team registration data in Firebase
+
 Run:
 
 ```
