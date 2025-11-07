@@ -746,21 +746,19 @@ def api_reset_tournament():
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
 
-# Serve React build in production (optional)
-FRONTEND_BUILD_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'frontend', 'build')  # Optional static serving
-
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
-def serve_react(path):
-    if path.startswith('api/'):
-        return jsonify({'error': 'Not found'}), 404
-    if os.path.exists(os.path.join(FRONTEND_BUILD_DIR, path)):
-        return send_from_directory(FRONTEND_BUILD_DIR, path)
-    index_path = os.path.join(FRONTEND_BUILD_DIR, 'index.html')
-    if os.path.exists(index_path):
-        return send_from_directory(FRONTEND_BUILD_DIR, 'index.html')
-    # If build does not exist, provide a simple message
-    return 'React build not found. Run npm run build in the frontend directory.', 200  # Helpful hint in dev
+# API root endpoint
+@app.route('/')
+def api_root():
+    return jsonify({
+        'message': 'African Nations League API',
+        'status': 'running',
+        'endpoints': {
+            'teams': '/api/teams',
+            'matches': '/api/matches',
+            'simulate': '/simulate_match',
+            'play': '/play_match'
+        }
+    })
 
 if __name__ == '__main__':
     # Start development server
