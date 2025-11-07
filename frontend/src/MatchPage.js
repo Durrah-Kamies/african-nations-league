@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import GoBackButton from './GoBackButton';
 // MatchPage.js
@@ -12,7 +12,7 @@ const MatchPage = () => {
   const [preview, setPreview] = useState('');    // AI preview text
   const [analysis, setAnalysis] = useState({});  // Per-player analysis cache
 
-  async function load() {
+  const load = useCallback(async () => {
     // Fetch match details by id
     setLoading(true);
     setError('');
@@ -26,16 +26,11 @@ const MatchPage = () => {
     } finally {
       setLoading(false);
     }
-  }
+  }, [matchId]);
 
-  useEffect(() => { load(); }, [matchId]);
+  useEffect(() => { load(); }, [load]);
 
-  useEffect(() => {
-    // Generate AI preview for scheduled matches
-    if (match && match.status === 'scheduled') generatePreview();
-  }, [match]);
-
-  async function generatePreview() {
+  const generatePreview = useCallback(async () => {
     // Calls backend to generate a match preview (Gemini or fallback)
     try {
       setPreview('');
@@ -43,7 +38,12 @@ const MatchPage = () => {
       const data = await res.json();
       if (data.preview) setPreview(data.preview);
     } catch (_) {}
-  }
+  }, [matchId]);
+
+  useEffect(() => {
+    // Generate AI preview for scheduled matches
+    if (match && match.status === 'scheduled') generatePreview();
+  }, [match, generatePreview]);
 
   async function analyzePlayer(playerName) {
     // Per-scorer analysis; memoized by a simple key in state

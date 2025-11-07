@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 // App.js
 // NOTE: App shell for the React client. Sets up router, nav, routes, and a tiny auth guard.
 import React from 'react';
