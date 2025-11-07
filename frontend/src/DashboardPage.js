@@ -88,7 +88,7 @@ const DashboardPage = () => {
     // Full play: detailed timeline + optional AI commentary (slower)
     if (!window.confirm('Play this match with detailed AI commentary? This may take a moment.')) return;
     try {
-      const res = await fetch(`${API_URL}/play_match/${matchId}`);
+      const res = await fetch(`${API_URL}/play_match/${matchId}`, { method: 'POST' });
       const data = await res.json();
       if (!res.ok || data.success === false) throw new Error(data.error || 'Play failed');
       await loadData();
