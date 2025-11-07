@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { API_URL } from './config';
 // RegisterPage.js
 // NOTE: Team registration form that posts to the backend to create a team + generated squad.
 
@@ -32,7 +33,7 @@ const RegisterPage = () => {
     setSubmitting(true);
     setError('');
     try {
-      const res = await fetch('/api/teams', {
+      const res = await fetch(`${API_URL}/api/teams`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)

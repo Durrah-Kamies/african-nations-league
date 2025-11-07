@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import GoBackButton from './GoBackButton';
+import { API_URL } from './config';
 // TeamAnalyticsPage.js
 // NOTE: Pulls aggregated analytics for a selected team from the backend.
 
@@ -12,7 +13,7 @@ const TeamAnalyticsPage = () => {
 
   useEffect(() => {
     // Fetch team list for the select dropdown
-    fetch('/api/teams')
+    fetch(`${API_URL}/api/teams`)
       .then(r => r.json())
       .then(d => setTeams(Array.isArray(d) ? d : []))
       .catch(() => setTeams([]));
@@ -25,7 +26,7 @@ const TeamAnalyticsPage = () => {
     setError('');
     setData(null);
     try {
-      const res = await fetch(`/api/team_analytics/${encodeURIComponent(country)}`);
+      const res = await fetch(`${API_URL}/api/team_analytics/${encodeURIComponent(country)}`);
       const json = await res.json();
       if (!res.ok || json.error) throw new Error(json.error || 'Failed to load analytics');
       setData(json);

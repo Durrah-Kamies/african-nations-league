@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { API_URL } from './config';
 // HomePage.js
 // NOTE: Public landing page. Shows hero, features, and quick stats from the API.
 
@@ -8,7 +9,7 @@ const HomePage = () => {
 
   useEffect(() => {
     // Load number of registered teams for the hero stats
-    fetch('/api/teams')
+    fetch(`${API_URL}/api/teams`)
       .then(res => res.json())
       .then(data => setTeamsCount(Array.isArray(data) ? data.length : 0))
       .catch(() => setTeamsCount(0));

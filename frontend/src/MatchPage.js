@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import GoBackButton from './GoBackButton';
+import { API_URL } from './config';
 // MatchPage.js
 // NOTE: Shows details for a single match, optional AI preview/commentary, and per-scorer analysis.
 
@@ -17,7 +18,7 @@ const MatchPage = () => {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch(`/api/match/${matchId}`);
+      const res = await fetch(`${API_URL}/api/match/${matchId}`);
       const data = await res.json();
       if (!res.ok || data.error) throw new Error(data.error || 'Failed to load match');
       setMatch(data);
@@ -34,7 +35,7 @@ const MatchPage = () => {
     // Calls backend to generate a match preview (Gemini or fallback)
     try {
       setPreview('');
-      const res = await fetch(`/api/match_preview/${matchId}`);
+      const res = await fetch(`${API_URL}/api/match_preview/${matchId}`);
       const data = await res.json();
       if (data.preview) setPreview(data.preview);
     } catch (_) {}
@@ -50,7 +51,7 @@ const MatchPage = () => {
     const key = playerName.toLowerCase().replace(/ /g, '-');
     setAnalysis(a => ({ ...a, [key]: 'loading' }));
     try {
-      const res = await fetch(`/api/player_analysis/${matchId}/${encodeURIComponent(playerName)}`);
+      const res = await fetch(`${API_URL}/api/player_analysis/${matchId}/${encodeURIComponent(playerName)}`);
       const data = await res.json();
       if (!res.ok) {
         throw new Error(data.error || 'Failed to fetch analysis');

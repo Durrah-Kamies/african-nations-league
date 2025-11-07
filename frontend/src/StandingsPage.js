@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { API_URL } from './config';
 // StandingsPage.js
 // NOTE: Golden Boot leaderboard computed from match goal_scorers across all matches.
 
@@ -9,7 +10,7 @@ const StandingsPage = () => {
 
   // Load all matches once and compute scorers client-side
   useEffect(() => {
-    fetch('/api/matches')
+    fetch(`${API_URL}/api/matches`)
       .then(res => res.json())
       .then(data => setMatches(Array.isArray(data) ? data : []))
       .catch(err => setError(err?.message || 'Failed to load standings'));

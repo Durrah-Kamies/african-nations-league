@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { API_URL } from './config';
 // DashboardPage.js
 // NOTE: Admin dashboard for managing tournament: view teams/matches, create/reset bracket, and trigger simulations.
 
@@ -17,8 +18,8 @@ const DashboardPage = () => {
     setError('');
     try {
       const [tRes, mRes] = await Promise.all([
-        fetch('/api/teams'),
-        fetch('/api/matches')
+        fetch(`${API_URL}/api/teams`),
+        fetch(`${API_URL}/api/matches`)
       ]);
       const [tData, mData] = await Promise.all([tRes.json(), mRes.json()]);
       setTeams(Array.isArray(tData) ? tData : []);
@@ -40,7 +41,7 @@ const DashboardPage = () => {
     if (!teams || teams.length < 8) return;
     setCreating(true);
     try {
-      const res = await fetch('/api/admin/create_tournament', { method: 'POST' });
+      const res = await fetch(`${API_URL}/api/admin/create_tournament`, { method: 'POST' });
       const data = await res.json();
       if (!res.ok || data.success === false) throw new Error(data.error || 'Failed to create tournament');
       await loadData();
@@ -57,7 +58,7 @@ const DashboardPage = () => {
     if (!window.confirm('Are you sure you want to reset the entire tournament? This will delete all matches.')) return;
     setResetting(true);
     try {
-      const res = await fetch('/api/admin/reset_tournament', { method: 'POST' });
+      const res = await fetch(`${API_URL}/api/admin/reset_tournament`, { method: 'POST' });
       const data = await res.json();
       if (!res.ok || data.success === false) throw new Error(data.error || 'Failed to reset tournament');
       await loadData();
@@ -73,7 +74,7 @@ const DashboardPage = () => {
     // Quick sim: no detailed events/commentary (fast)
     if (!window.confirm('Simulate this match quickly without detailed commentary?')) return;
     try {
-      const res = await fetch(`/simulate_match/${matchId}`);
+      const res = await fetch(`${API_URL}/simulate_match/${matchId}`, { method: 'POST' });
       const data = await res.json();
       if (!res.ok || data.success === false) throw new Error(data.error || 'Simulation failed');
       await loadData();
@@ -87,7 +88,7 @@ const DashboardPage = () => {
     // Full play: detailed timeline + optional AI commentary (slower)
     if (!window.confirm('Play this match with detailed AI commentary? This may take a moment.')) return;
     try {
-      const res = await fetch(`/play_match/${matchId}`);
+      const res = await fetch(`${API_URL}/play_match/${matchId}`);
       const data = await res.json();
       if (!res.ok || data.success === false) throw new Error(data.error || 'Play failed');
       await loadData();

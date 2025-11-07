@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { API_URL } from './config';
 // BracketPage.js
 // NOTE: Displays the bracket by grouping matches into rounds; links to match details.
 
@@ -42,7 +43,7 @@ const BracketPage = () => {
 
   useEffect(() => {
     // Fetch matches once at mount
-    fetch('/api/matches')
+    fetch(`${API_URL}/api/matches`)
       .then(async res => {
         const text = await res.text();
         try {
