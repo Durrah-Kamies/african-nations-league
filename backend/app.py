@@ -760,6 +760,15 @@ def api_root():
         }
     })
 
+# Error handlers - return JSON instead of HTML
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify({'error': 'Not found', 'message': str(error)}), 404
+
+@app.errorhandler(500)
+def internal_error(error):
+    return jsonify({'error': 'Internal server error', 'message': str(error)}), 500
+
 if __name__ == '__main__':
     # Start development server
     app.run(debug=True, host='0.0.0.0', port=5000)  # Start dev server

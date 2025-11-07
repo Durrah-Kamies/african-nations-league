@@ -20,3 +20,9 @@
   to = "https://african-nations-league-tk2u.onrender.com/play_match/:splat"
   status = 200
   force = true
+
+# SPA fallback - must be last
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

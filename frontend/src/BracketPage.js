@@ -43,7 +43,15 @@ const BracketPage = () => {
   useEffect(() => {
     // Fetch matches once at mount
     fetch('/api/matches')
-      .then(res => res.json())
+      .then(async res => {
+        const text = await res.text();
+        try {
+          const data = JSON.parse(text);
+          return data;
+        } catch (e) {
+          throw new Error(`Invalid JSON response: ${text.substring(0, 100)}`);
+        }
+      })
       .then(data => setMatches(Array.isArray(data) ? data : []))
       .catch(err => setError(err?.message || 'Failed to load bracket'));
   }, []);
