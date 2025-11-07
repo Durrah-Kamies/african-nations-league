@@ -1,0 +1,22 @@
+# Node
+node_modules/
+frontend/node_modules/
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Env & secrets
+.env
+backend/serviceAccountKey.json
+
+# Build artifacts
+build/
+dist/
+
+# OS/editor
+.DS_Store
+.idea/
+.vscode/
