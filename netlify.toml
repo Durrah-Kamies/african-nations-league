@@ -7,19 +7,16 @@
   from = "/api/*"
   to = "https://african-nations-league-tk2u.onrender.com/api/:splat"
   status = 200
-  force = true
 
 [[redirects]]
   from = "/simulate_match/*"
   to = "https://african-nations-league-tk2u.onrender.com/simulate_match/:splat"
   status = 200
-  force = true
 
 [[redirects]]
   from = "/play_match/*"
   to = "https://african-nations-league-tk2u.onrender.com/play_match/:splat"
   status = 200
-  force = true
 
 # SPA fallback - must be last
 [[redirects]]
