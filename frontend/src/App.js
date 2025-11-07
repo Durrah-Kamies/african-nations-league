@@ -44,7 +44,7 @@ function App() {
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route path="/home" element={<HomePage />} />
-          <Route path="/register" element={<RequireAuth><RegisterPage /></RequireAuth>} />
+          <Route path="/register" element={<RegisterPage />} />
           <Route path="/tournament" element={<BracketPage />} />
           <Route path="/standings" element={<StandingsPage />} />
           <Route path="/analytics" element={<TeamAnalyticsPage />} />
