@@ -134,7 +134,7 @@ def simulate_match(team1_data, team2_data, detailed=False, knockout=False):
             
             event_roll = random.random()
             
-            if event_roll < 0.1 and goals_scored[attacking_team['country']] < (team1_goals if attacking_team == team1_data else team2_goals):
+            if event_roll < 0.15 and goals_scored[attacking_team['country']] < (team1_goals if attacking_team == team1_data else team2_goals):
                 # Goal event: pick an attacker/midfielder as scorer
                 scorer = random.choice([p for p in attacking_team['squad'] if p['natural_position'] in ['AT', 'MD']])
                 match_events.append({
@@ -150,7 +150,7 @@ def simulate_match(team1_data, team2_data, detailed=False, knockout=False):
                 })
                 goals_scored[attacking_team['country']] += 1
                 
-            elif event_roll < 0.2:
+            elif event_roll < 0.35:
                 # Goalkeeper save event
                 goalkeeper = random.choice([p for p in defending_team['squad'] if p['natural_position'] == 'GK'])
                 match_events.append({
@@ -160,7 +160,7 @@ def simulate_match(team1_data, team2_data, detailed=False, knockout=False):
                     'player': goalkeeper['name']
                 })
                 
-            elif event_roll < 0.3:
+            elif event_roll < 0.55:
                 # Created chance that didn't necessarily score
                 attacker = random.choice([p for p in attacking_team['squad'] if p['natural_position'] in ['AT', 'MD']])
                 match_events.append({
@@ -170,7 +170,7 @@ def simulate_match(team1_data, team2_data, detailed=False, knockout=False):
                     'player': attacker['name']
                 })
                 
-            elif event_roll < 0.4:
+            elif event_roll < 0.70:
                 # Foul to add variety to the timeline
                 player = random.choice(attacking_team['squad'])
                 match_events.append({
@@ -258,10 +258,39 @@ def simulate_match(team1_data, team2_data, detailed=False, knockout=False):
         # Try AI preview and live commentary; fall back gracefully if unavailable
         try:
             match_preview = commentary_generator.generate_match_preview(team1_data, team2_data)
-            current_score = f"{goals_scored[team1_data['country']]}-{goals_scored[team2_data['country']]}"
-            ai_commentary = commentary_generator.generate_live_commentary(
-                match_events, team1_data['country'], team2_data['country'], current_score
-            )
+            
+            # Add comprehensive commentary structure
+            ai_commentary = []
+            
+            # Opening commentary
+            ai_commentary.append(f"⚽ KICK-OFF! The match between {team1_data['country']} and {team2_data['country']} is underway!")
+            
+            # First half events
+            first_half_events = [e for e in match_events if e['minute'] <= 45]
+            if first_half_events:
+                current_score = f"{goals_scored[team1_data['country']]}-{goals_scored[team2_data['country']]}"
+                first_half_commentary = commentary_generator.generate_live_commentary(
+                    first_half_events, team1_data['country'], team2_data['country'], current_score
+                )
+                ai_commentary.extend(first_half_commentary)
+            
+            # Halftime commentary
+            halftime_score = f"{sum(1 for e in match_events if e['minute'] <= 45 and e['type'] == 'goal' and e['team'] == team1_data['country'])}-{sum(1 for e in match_events if e['minute'] <= 45 and e['type'] == 'goal' and e['team'] == team2_data['country'])}"
+            ai_commentary.append(f"⏱️ HALF-TIME: {team1_data['country']} {halftime_score} {team2_data['country']}")
+            
+            # Second half events
+            second_half_events = [e for e in match_events if 45 < e['minute'] <= 90]
+            if second_half_events:
+                current_score = f"{goals_scored[team1_data['country']]}-{goals_scored[team2_data['country']]}"
+                second_half_commentary = commentary_generator.generate_live_commentary(
+                    second_half_events, team1_data['country'], team2_data['country'], current_score
+                )
+                ai_commentary.extend(second_half_commentary)
+            
+            # Closing commentary
+            winner_text = f"{team1_data['country']} win" if team1_goals > team2_goals else f"{team2_data['country']} win" if team2_goals > team1_goals else "It's a draw"
+            ai_commentary.append(f"🏁 FULL-TIME! {team1_data['country']} {team1_goals}-{team2_goals} {team2_data['country']}. {winner_text}!")
+            
         except Exception as e:
             print(f"Error generating AI commentary: {e}")
             ai_commentary = ["AI commentary temporarily unavailable."]
