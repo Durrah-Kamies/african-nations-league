@@ -9,6 +9,7 @@ from .ai_commentary import GeminiCommentaryGenerator
 from .email_service import send_match_completion_email
 import random
 import os
+import threading
 from datetime import datetime
 from dotenv import load_dotenv
 
@@ -670,6 +671,14 @@ def api_player_analysis(match_id, player_name):
 
 # HTML ROUTES are no longer used by the React app.
 
+def _run_post_match_tasks(match_data, result):
+    """Run tournament progression and emails in background thread"""
+    try:
+        _progress_tournament_if_ready()
+        send_match_completion_email(match_data, result, db)
+    except Exception as e:
+        print(f"Background post-match tasks failed: {e}")
+
 @app.route('/simulate_match/<match_id>', methods=['POST'])
 def simulate_match_route(match_id):
     try:
@@ -685,13 +694,10 @@ def simulate_match_route(match_id):
             'completed_at': datetime.now().isoformat()
         })
         
-        _progress_tournament_if_ready()  # If QFs or SFs finished, create next round
-        
-        # Send email notification to federations (non-blocking, fails silently if timeout)
-        try:
-            send_match_completion_email(match_data, result, db)
-        except Exception as e:
-            print(f"Email notification failed (non-critical): {e}")
+        # Run tournament progression and emails in background thread
+        thread = threading.Thread(target=_run_post_match_tasks, args=(match_data, result))
+        thread.daemon = True
+        thread.start()
         
         return jsonify({'success': True, 'result': result})
     except Exception as e:
@@ -712,13 +718,10 @@ def play_match(match_id):
             'completed_at': datetime.now().isoformat()
         })
         
-        _progress_tournament_if_ready()  # Also advance bracket when using detailed play
-        
-        # Send email notification to federations (non-blocking, fails silently if timeout)
-        try:
-            send_match_completion_email(match_data, result, db)
-        except Exception as e:
-            print(f"Email notification failed (non-critical): {e}")
+        # Run tournament progression and emails in background thread
+        thread = threading.Thread(target=_run_post_match_tasks, args=(match_data, result))
+        thread.daemon = True
+        thread.start()
         
         return jsonify({'success': True, 'result': result})
     except Exception as e:
