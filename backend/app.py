@@ -3,6 +3,7 @@
 # It exposes JSON APIs used by the React frontend, simulates matches, and
 # integrates optional AI commentary via Gemini. Comments are kept brief/human.
 from flask import Flask, request, jsonify, send_from_directory
+from flask_cors import CORS
 from .config import initialize_firebase, initialize_gemini
 from .ai_commentary import GeminiCommentaryGenerator
 from .email_service import send_match_completion_email
@@ -15,6 +16,7 @@ load_dotenv()  # Load environment variables from .env (e.g., API keys, secrets)
 
 app = Flask(__name__)  # Create the Flask app instance
 app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key-2025')  # Used for session/signing
+CORS(app)  # Enable CORS for all routes (frontend can be on different domain)
 
 # Initialize Firebase and Gemini
 # Firebase (Firestore) stores teams and matches; Gemini (optional) powers AI text.

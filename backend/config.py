@@ -150,7 +150,7 @@ def initialize_gemini():
         # Use a widely supported model name for v1beta and the SDK
         # and pass it with the correct parameter name.
         model = genai.GenerativeModel(
-            model="gemini-1.0-pro",
+            model_name="gemini-1.0-pro",
             generation_config=generation_config,
             safety_settings=safety_settings
         )
