@@ -1,6 +1,6 @@
 # African Nations League – Project Guide
 
-Short, humanized notes for reviewers/students. This app simulates an African Nations League with team registration, bracket play, AI commentary, and analytics.
+This app simulates an African Nations League with team registration, bracket play, AI commentary, analytics, and automated email notifications.
 
 ## What’s inside
 
