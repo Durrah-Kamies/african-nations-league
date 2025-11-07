@@ -3,9 +3,9 @@
 # It exposes JSON APIs used by the React frontend, simulates matches, and
 # integrates optional AI commentary via Gemini. Comments are kept brief/human.
 from flask import Flask, request, jsonify, send_from_directory
-from config import initialize_firebase, initialize_gemini
-from ai_commentary import GeminiCommentaryGenerator
-from email_service import send_match_completion_email
+from backend.config import initialize_firebase, initialize_gemini
+from backend.ai_commentary import GeminiCommentaryGenerator
+from backend.email_service import send_match_completion_email
 import random
 import os
 from datetime import datetime
