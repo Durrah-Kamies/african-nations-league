@@ -1,7 +1,4 @@
-# API redirects - proxy to backend
-/api/*  https://african-nations-league-tk2u.onrender.com/api/:splat  200
-/simulate_match/*  https://african-nations-league-tk2u.onrender.com/simulate_match/:splat  200
-/play_match/*  https://african-nations-league-tk2u.onrender.com/play_match/:splat  200
-
-# SPA fallback
+/api/*  https://african-nations-league-tk2u.onrender.com/api/:splat  200!
+/simulate_match/*  https://african-nations-league-tk2u.onrender.com/simulate_match/:splat  200!
+/play_match/*  https://african-nations-league-tk2u.onrender.com/play_match/:splat  200!
 /*  /index.html  200
