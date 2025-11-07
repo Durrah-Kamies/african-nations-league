@@ -360,16 +360,22 @@ def _progress_tournament_if_ready():
 
         # Create semifinals if all QFs completed and no SF exists
         if all_completed(by_round['quarterfinal']) and len(by_round['semifinal']) == 0:
+            print(f"Creating semifinals - {len(by_round['quarterfinal'])} QFs completed")
             qfs = sorted(by_round['quarterfinal'], key=lambda m: m.get('created_at', ''))
             winners = []
             for m in qfs:
                 w_country = (m.get('result') or {}).get('winner')
+                print(f"QF winner: {w_country}")
                 team = _get_team_by_country(w_country)
                 if team:
                     winners.append(team)
+                else:
+                    print(f"Warning: Could not find team for {w_country}")
+            print(f"Found {len(winners)} winners for semifinals")
             if len(winners) >= 4:
                 pairs = [(winners[0], winners[1]), (winners[2], winners[3])]
                 for t1, t2 in pairs:
+                    print(f"Creating SF: {t1['country']} vs {t2['country']}")
                     db.collection('matches').add({
                         'round': 'semifinal',
                         'team1': t1,

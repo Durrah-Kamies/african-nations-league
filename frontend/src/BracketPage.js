@@ -40,21 +40,25 @@ const BracketPage = () => {
   // Load all matches and group by tournament round
   const [matches, setMatches] = useState(null);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const loadMatches = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_URL}/api/matches`);
+      const text = await res.text();
+      const data = JSON.parse(text);
+      setMatches(Array.isArray(data) ? data : []);
+      setError(null);
+    } catch (err) {
+      setError(err?.message || 'Failed to load bracket');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    // Fetch matches once at mount
-    fetch(`${API_URL}/api/matches`)
-      .then(async res => {
-        const text = await res.text();
-        try {
-          const data = JSON.parse(text);
-          return data;
-        } catch (e) {
-          throw new Error(`Invalid JSON response: ${text.substring(0, 100)}`);
-        }
-      })
-      .then(data => setMatches(Array.isArray(data) ? data : []))
-      .catch(err => setError(err?.message || 'Failed to load bracket'));
+    loadMatches();
   }, []);
 
   const rounds = useMemo(() => {
@@ -72,6 +76,11 @@ const BracketPage = () => {
     <div className="bracket-container">{/* Wrapper + title + helper links */}
       <h1>Tournament Bracket</h1>
       <p className="text-center mb-2">African Nations League - Road to the Final</p>
+      <div className="text-center mb-2">
+        <button onClick={loadMatches} className="btn btn-secondary" disabled={loading}>
+          <i className={`fas fa-sync-alt ${loading ? 'fa-spin' : ''}`}></i> {loading ? 'Refreshing...' : 'Refresh Bracket'}
+        </button>
+      </div>
 
       {!matches && !error && (
         <div className="loading-section">
