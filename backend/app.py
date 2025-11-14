@@ -805,6 +805,17 @@ def api_root():
         }
     })
 
+# Keep-alive endpoint to prevent Render from sleeping
+@app.route('/health')
+@app.route('/ping')
+def health_check():
+    """Simple health check endpoint for keep-alive services"""
+    return jsonify({
+        'status': 'healthy',
+        'timestamp': datetime.now().isoformat(),
+        'message': 'Backend is awake'
+    }), 200
+
 # Error handlers - return JSON instead of HTML
 @app.errorhandler(404)
 def not_found(error):
